@@ -1,21 +1,14 @@
 const express = require('express')
-const { renderMain } = require('../controllers/page')
-
+const { renderMain , renderTest, renderLogin, rend } = require('../controllers/page')
+const { isLoggedIn, isNotLoggedIn } = require('../middlewares');
+const {printd} = require('lee-simple-log')
 
 const router = express.Router()
 
-router.get('/',renderMain)
+router.get('/',isNotLoggedIn,renderLogin)
 
-router.get('/main', (req,res)=>{
-    const test = req.params
-    res.render("main",
-    {   title: '메인페이지 - YSM', 
-        'channels': {}
-    })
-})
+router.get('/main',isLoggedIn ,renderMain)
 
-router.get('/test',(req,res)=>{
-    res.render('test',{title: '테스트 페이지 - YSM'})
-})
+router.get('/test',renderTest)
 
 module.exports = router
