@@ -6,66 +6,71 @@ function print(a){
     console.log(a)
 }
 
-async function updateChannelInfo ( channelId,temp,result,channel){
+async function updateChannelInfo ( channelId,channel){
 
-    const service = google.youtube({version: 'v3' })
-    playlistId = channelId[0] + "ULF"+channelId.substr(2)
-
-    const params = {
-      key: process.env.API_KEY,
-      part: 'snippet',
-      playlistId: playlistId     
-    }
-
-    console.log("TESTTESTTEST >>>>>> ", playlistId)
-
-    await axios.get("https://www.googleapis.com/youtube/v3/playlistItems",{
+    
+    return new Promise(async (resolve,reject) =>{
+      const service = google.youtube({version: 'v3' })
+      playlistId = channelId[0] + "ULF"+channelId.substr(2)
+      const params = {
+        key: process.env.API_KEY,
+        part: 'snippet',
+        playlistId: playlistId     
+      }
+      await axios.get("https://www.googleapis.com/youtube/v3/playlistItems",{
         params
-    })
-    .then((response) =>{
-        console.log(response.data.items[0])
-        console.log(response.data.items[0].snippet.publishedAt)
-        
-        temp.title = channel.snippet.title
-        temp.channelId = channel.snippet.resourceId.channelId
-        temp.description = channel.snippet.description.substring(0,40)
-        temp.publishedAt = response.data.items[0].snippet.publishedAt
-        temp.videoId = response.data.items[0].snippet.resourceId.videoId
-        temp.videoTitle = response.data.items[0].snippet.title
-        result.push(temp)
-        console.log("Temp : ", temp)
-        //res.send(response.data.items)
-        
-        return;
-    })
-    .catch((err)=>{
-        console.error(err)
-    })
-   
-    console.log(">>>> 끝")
+      })
+      .then((response) =>{
+          temp = {}
+          temp.title = channel.snippet.title
+          temp.channelId = channel.snippet.resourceId.channelId
+          temp.description = channel.snippet.description.substring(0,40)
+          temp.publishedAt = response.data.items[0].snippet.publishedAt
+          temp.videoId = response.data.items[0].snippet.resourceId.videoId
+          temp.videoTitle = response.data.items[0].snippet.title
+          //console.log("Channel title:", temp.title)
+          console.log("Channel title:", temp)
+          resolve(temp)
+      })
+      .catch((err)=>{
+          console.error(err)
+          reject(err)
+      })
+
+    } )
+
 }
 
-async function getChannelAsync(items, result){
+const processItems = async (items, result) =>{
+  let promiseList = []
   for (let index in items) {
     let channel = items[index]
-    let temp = {}
 
-    await updateChannelInfo(channel.snippet.resourceId.channelId,temp,result,channel)
-    if (index == 3){
-      break
-    }
+    promiseList.push(updateChannelInfo(channel.snippet.resourceId.channelId,channel))
   }
 
-  return 
+  result = Promise.all(promiseList)
+  console.log("Result of processed promise: ",result)
+  return result
+
 }
 
-exports.processItems =  (oauth2Client,items, result) =>{
+exports.processItemsPromise =  async (items, result) =>{
     
-    getChannelAsync(items,result).then((value)=>{
-      console.log("--------------------- test -------------------")
-      console.log(value,value[0],value[1])
-      console.log("--------------------- ---- -------------------")
-    })
+  return new Promise(async function(resolved,rejected){
+    
+    try{
+      let resultList  = await processItems(items, result)
+      resolved(resultList)
+    }
+    catch(error){
+      console.error(error)
+      rejected(error)
+    }
+    //console.log(result)
+    
+  })
+
 
   
 }

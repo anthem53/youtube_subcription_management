@@ -1,10 +1,10 @@
 const { google } = require('googleapis');
 const OAuth2 = google.auth.OAuth2
 const { isLoggedIn } = require('../middlewares');
-const { processItems} = require('../services/youtube')
+const { processItemsPromise } = require('../services/youtube')
 
 
-exports.renderMain = (req,res)=>{
+exports.renderMain = async (req,res)=>{
     
     var oauth2Client = new OAuth2(
         process.env.GOOGLE_ID,
@@ -36,11 +36,22 @@ exports.renderMain = (req,res)=>{
         }
         if (data) {
             //console.log(">>> DATA: \n",data.data.items);
-            let result = []
-            let processPromise = processItems(oauth2Client,data.data.items,result)
-            console.log(result)
-            res.render('main',{title: '메인페이지 - YSM', 
-                                channels: data.data.items})
+            
+            let processedPromise = processItemsPromise(data.data.items)
+            processedPromise.then(function(promiseResult){
+                console.log("############# promise result #############")
+                console.log(promiseResult)
+                res.render('main',{title:'메인페이지 - YSM' ,
+                                        channels: promiseResult})
+            },function(err){
+                console.log("############# promise Fail #############")
+                console.error(err)
+            })
+
+            
+            
+            // res.render('main',{title: '메인페이지 - YSM', 
+            //                     channels: data.data.items})
             //res.send(data)
         }
         if (response) {
