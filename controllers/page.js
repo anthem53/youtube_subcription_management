@@ -44,7 +44,7 @@ exports.renderSubscription = async (req,res)=>{
             let processedPromise = processItemsPromise(data.data.items)
             processedPromise.then(function(promiseResult){
                 console.log("############# promise result #############")
-                console.log(promiseResult)
+                //console.log(promiseResult)
                 res.render('subscription',{title:'메인페이지 - YSM' ,
                                         channels: promiseResult})
             },function(err){

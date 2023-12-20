@@ -27,8 +27,7 @@ async function updateChannelInfo ( channelId,channel){
           temp.publishedAt = response.data.items[0].snippet.publishedAt
           temp.videoId = response.data.items[0].snippet.resourceId.videoId
           temp.videoTitle = response.data.items[0].snippet.title
-          //console.log("Channel title:", temp.title)
-          console.log(">>> publishAt type ",typeof(temp.publishedAt))
+          console.log("Channel title:", temp.title)
           resolve(temp)
       })
       .catch((err)=>{
@@ -55,15 +54,14 @@ async function updateChannelInfo ( channelId,channel){
 
 const processItems = async (items) =>{
   let promiseList = []
-  let result = []
   for (let index in items) {
     let channel = items[index]
 
     promiseList.push(updateChannelInfo(channel.snippet.resourceId.channelId,channel))
   }
 
-  result = Promise.all(promiseList)
-  console.log("Result of processed promise: ",result)
+  let result = Promise.all(promiseList)
+  
   return result
 
 }
@@ -75,8 +73,18 @@ exports.processItemsPromise =  async (items) =>{
     try{
       let tempResultList  = await processItems(items)
       let resultList  = []
-
-      resolved(tempResultList)
+      const curDate = Date.now()
+      
+      for (let infoIndex in tempResultList){
+        const info = tempResultList[infoIndex]
+        const diff = (curDate - new Date(info.publishedAt)) / (1000*60*60*24) 
+      
+        if (diff > 1){
+          resultList.push(info)
+        }
+      }
+      //console.log(">>>> resultList : ",resultList)
+      resolved(resultList)
     }
     catch(error){
       console.error(error)      
