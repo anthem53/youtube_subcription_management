@@ -4,7 +4,11 @@ const { isLoggedIn } = require('../middlewares');
 const { processItemsPromise } = require('../services/youtube')
 
 
-exports.renderMain = async (req,res)=>{
+exports.renderMain = async (req,res) =>{
+    res.render('main',{title: '메인 페이지 - YSM'})
+}
+
+exports.renderSubscription = async (req,res)=>{
     
     var oauth2Client = new OAuth2(
         process.env.GOOGLE_ID,
@@ -41,18 +45,15 @@ exports.renderMain = async (req,res)=>{
             processedPromise.then(function(promiseResult){
                 console.log("############# promise result #############")
                 console.log(promiseResult)
-                res.render('main',{title:'메인페이지 - YSM' ,
+                res.render('subscription',{title:'메인페이지 - YSM' ,
                                         channels: promiseResult})
             },function(err){
                 console.log("############# promise Fail #############")
-                console.error(err)
+                //console.error(err)
+                console.log("############# promise Fail END #############")
             })
 
             
-            
-            // res.render('main',{title: '메인페이지 - YSM', 
-            //                     channels: data.data.items})
-            //res.send(data)
         }
         if (response) {
             console.log('Status code: ' + response.statusCode);

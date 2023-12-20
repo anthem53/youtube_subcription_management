@@ -1,7 +1,8 @@
 {% include "layout/header.html" %}
 <script>
-    function browse(channelName, videoTitle,videoDate,videoId ){
+    function browse(channelName,channelId ,videoTitle,videoDate,videoId ){
         document.getElementById("channelName").value = channelName;
+        document.getElementById("channelLink").href = "https://www.youtube.com/channel/"+channelId
         document.getElementById("recentVideoTitle").value = videoTitle;
         document.getElementById("publishedAt").value = videoDate;
         document.getElementById("sampleFrame").src = 'https://www.youtube.com/embed/'+videoId
@@ -17,13 +18,17 @@
             <span class="fs-5 fw-semibold">List group</span>
             </a>
             <div class="list-group list-group-flush border-bottom scrollarea">
-            <a href="#" onclick="browse('TEST Title','TEST video name', '2023-11-12','6caD9PYKKHI')" class="list-group-item list-group-item-action active py-3 lh-sm" aria-current="true">
+
+            {% for channel in channels %}
+            <a onclick="browse('{{channel.title}}','{{channel.channelId}}','{{channel.videoTitle}}', '{{channel.publishedAt}}','{{channel.videoId}}')" class="list-group-item list-group-item-action active py-3 lh-sm" aria-current="true">
                 <div class="d-flex w-100 align-items-center justify-content-between">
-                <strong class="mb-1"> 더미용 아이템</strong>
-                <small> 최신 업로드 일자 있으면 좋을듯</small>
+                    <strong class="mb-1">{{channel.title}}</strong>
+                    <small>{{channel.publishedAt}}</small>
                 </div>
-                <div class="col-10 mb-1 small">대략적인 설명</div>
+                <div class="col-10 mb-1 small">{{channel.description}}</div>
+                
             </a>
+            {% endfor %}
             
         
             
@@ -56,7 +61,17 @@
                 </div>
             </div>
             
-            <iframe id="sampleFrame" class="m-3" width="560" height="315" src="https://www.youtube.com/embed/yEGoM5uuhG8?si=hL7djwa_w7rJEKAe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+            <div class="form-group m-3">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text"> Channel Link </span>
+                    </div>
+                    <a class="btn btn-primary form-control"  id="channelLink" target="_blank"> 채널 바로가기 </a>
+                    
+                </div>
+            </div>
+
+            <iframe id="sampleFrame" class="m-3" width="560" height="315" src="https://www.youtube.com/embed/" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
             </iframe>
             
         </div>

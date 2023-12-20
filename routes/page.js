@@ -1,5 +1,5 @@
 const express = require('express')
-const { renderMain , renderTest, renderLogin } = require('../controllers/page')
+const { renderMain , renderTest, renderLogin, renderSubscription } = require('../controllers/page')
 const { isLoggedIn, isNotLoggedIn } = require('../middlewares');
 const {printd} = require('lee-simple-log')
 
@@ -10,5 +10,7 @@ router.get('/',isNotLoggedIn,renderLogin)
 router.get('/main',isLoggedIn ,renderMain)
 
 router.get('/test',renderTest)
+
+router.get('/subs',isLoggedIn,renderSubscription)
 
 module.exports = router
