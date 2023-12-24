@@ -9,8 +9,8 @@ router.get('/',isNotLoggedIn,renderLogin)
 
 router.get('/main',isLoggedIn ,renderMain)
 
-router.get('/test',renderTest)
+//router.get('/test',renderTest)
 
-router.get('/subs',isLoggedIn,renderSubscription)
+router.get('/subs',renderSubscription)
 
 module.exports = router

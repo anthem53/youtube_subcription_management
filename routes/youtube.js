@@ -7,29 +7,53 @@ const { isLoggedIn } = require('../middlewares');
 
 const router = express.Router()
 
-router.get('/subscription',isLoggedIn, (req,res)=>{
+const getSubscriptionList = async (oauth2Client)=>{
 
-
-    const params = {
-        key: process.env.API_KEY,
+    let result = []
+    let params =  {
         part: 'snippet',
-        playlistId: 'UULFe6i2WT1bCAxo0F0FYhB_iQ'
+        mine: true,
+        order:'unread',
+        maxResults:50,
+        headers: {}
     }
 
-    axios.get("https://www.googleapis.com/youtube/v3/playlistItems",{
-        params
-    })
-    .then((response) =>{
-        console.log(response.data.items[0])
-        console.log(response.data.items[0].snippet.publishedAt)
-        res.send(response.data.items)
-        
-    })
-    .catch((err)=>{
-        console.error(err)
-    })
+    while (true){
+        let youtubeRes = await google.youtube({
+            version: 'v3',
+            auth: oauth2Client
+        }).subscriptions.list(params );
     
+        console.log("nextToken : ",youtubeRes.data.nextPageToken)
+        result.push(youtubeRes.data.items)
 
+        if (youtubeRes.data.nextPageToken == undefined){
+            break
+        }
+        else{
+            params.pageToken = youtubeRes.data.nextPageToken
+        }
+    }
+    return result
+}
+
+router.get('/subscription',isLoggedIn,async  (req,res)=>{
+
+    var oauth2Client = new OAuth2(
+        process.env.GOOGLE_ID,
+        process.env.GOOGLE_SECRET,
+        process.env.CALLBACK
+    );
+
+    oauth2Client.credentials = {
+        access_token: req.user.accessToken,
+        refresh_token: req.user.refreshToken
+    };
+
+    const result = await getSubscriptionList(oauth2Client)
+    
+    console.log(">>> result :", result)
+    res.json(result)
 
 })
 

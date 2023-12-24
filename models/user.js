@@ -33,5 +33,6 @@ module.exports = class User extends Sequelize.Model {
     }
 
   static associate(db) {
+    db.User.hasMany(db.Channel)
   }
 };

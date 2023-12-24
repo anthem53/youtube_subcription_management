@@ -33,7 +33,7 @@ async function updateChannelInfo ( channelId,channel){
       .catch((err)=>{
           //console.error(err)
           console.error(">>>>>>>>> axios part, error")
-          if (axios.isAxiosError(error)) {
+          if (axios.isAxiosError(err)) {
             temp = {}
             temp.title = channel.snippet.title
             temp.channelId = channel.snippet.resourceId.channelId
@@ -79,7 +79,7 @@ exports.processItemsPromise =  async (items) =>{
         const info = tempResultList[infoIndex]
         const diff = (curDate - new Date(info.publishedAt)) / (1000*60*60*24) 
       
-        if (diff > 1){
+        if (diff >= 5){
           resultList.push(info)
         }
       }
@@ -94,6 +94,34 @@ exports.processItemsPromise =  async (items) =>{
     
   })
 
+}
 
+exports.getSubscriptionList = async (oauth2Client)=>{
+
+  let result = []
+  let params =  {
+      part: 'snippet',
+      mine: true,
+      order:'unread',
+      maxResults:50,
+      headers: {}
+  }
+
+  while (true){
+      let youtubeRes = await google.youtube({
+          version: 'v3',
+          auth: oauth2Client
+      }).subscriptions.list(params );
   
+      console.log("nextToken : ",youtubeRes.data.nextPageToken)
+      result = [...result,...youtubeRes.data.items]
+
+      if (youtubeRes.data.nextPageToken == undefined){
+          break
+      }
+      else{
+          params.pageToken = youtubeRes.data.nextPageToken
+      }
+  }
+  return result
 }

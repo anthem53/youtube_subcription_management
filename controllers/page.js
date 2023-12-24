@@ -1,7 +1,7 @@
 const { google } = require('googleapis');
 const OAuth2 = google.auth.OAuth2
 const { isLoggedIn } = require('../middlewares');
-const { processItemsPromise } = require('../services/youtube')
+const { processItemsPromise , getSubscriptionList } = require('../services/youtube')
 
 
 exports.renderMain = async (req,res) =>{
@@ -21,44 +21,24 @@ exports.renderSubscription = async (req,res)=>{
         refresh_token: req.user.refreshToken
     };
     
+    console.log(getSubscriptionList)
+    let subscriptionList = await getSubscriptionList(oauth2Client)
+    console.log("list[0]",subscriptionList)
+    console.log('>>> subscription end ')
+    console.log("list[0]",subscriptionList,subscriptionList[0].snippet)
 
-    let result = undefined;
-    google.youtube({
-        version: 'v3',
-        auth: oauth2Client
-    }).subscriptions.list({
-        part: 'snippet',
-        mine: true,
-        order:'unread',
-        maxResults:50,
-        headers: {}
-    }, function(err, data, response) {
-        if (err) {
-            console.error('Error: ' + err);
-            result = err
-            res.send(err)
-        }
-        if (data) {
-            //console.log(">>> DATA: \n",data.data.items);
-            
-            let processedPromise = processItemsPromise(data.data.items)
-            processedPromise.then(function(promiseResult){
-                console.log("############# promise result #############")
+    let processPromise = processItemsPromise(subscriptionList)
+
+    processPromise.then(function(promiseResult){
+        console.log("############# promise result #############")
                 //console.log(promiseResult)
                 res.render('subscription',{title:'메인페이지 - YSM' ,
                                         channels: promiseResult})
-            },function(err){
-                console.log("############# promise Fail #############")
-                //console.error(err)
-                console.log("############# promise Fail END #############")
-            })
-
-            
-        }
-        if (response) {
-            console.log('Status code: ' + response.statusCode);
-        }
-    });
+    }, function(err){
+        console.log("############# promise Fail #############")
+        //console.error(err)
+        console.log("############# promise Fail END #############")
+    })
 
     
 }
