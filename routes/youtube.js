@@ -7,35 +7,7 @@ const { isLoggedIn } = require('../middlewares');
 
 const router = express.Router()
 
-const getSubscriptionList = async (oauth2Client)=>{
 
-    let result = []
-    let params =  {
-        part: 'snippet',
-        mine: true,
-        order:'unread',
-        maxResults:50,
-        headers: {}
-    }
-
-    while (true){
-        let youtubeRes = await google.youtube({
-            version: 'v3',
-            auth: oauth2Client
-        }).subscriptions.list(params );
-    
-        console.log("nextToken : ",youtubeRes.data.nextPageToken)
-        result.push(youtubeRes.data.items)
-
-        if (youtubeRes.data.nextPageToken == undefined){
-            break
-        }
-        else{
-            params.pageToken = youtubeRes.data.nextPageToken
-        }
-    }
-    return result
-}
 
 router.get('/subscription',isLoggedIn,async  (req,res)=>{
 

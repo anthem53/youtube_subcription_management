@@ -1,4 +1,6 @@
 {% include "layout/header.html" %}
+
+
 <script>
     function browse(channelName,channelId ,videoTitle,videoDate,videoId ){
         document.getElementById("channelName").value = channelName;
@@ -8,14 +10,33 @@
         document.getElementById("sampleFrame").src = 'https://www.youtube.com/embed/'+videoId
 
     }
+
+    function updateChannel(){
+        fetch('/channel/save',{
+            method: 'POST',
+            headers: {
+	    	    'Content-Type':'application/json;charset=utf-8'
+	        },
+        })
+    }
 </script>
 
 <div class="container  min-vh-100 justify-content-center">    
+
+    <!-- 현재 탭의 상단 옵션 버튼 -->
+    <div class="d-flex justify-content-end flex-row">
+        <div class="btn-group" role="group" aria-label="Basic outlined example">
+            <button type="button" class="btn btn-outline-primary" onclick="updateChannel()" title="현재 접속한 계정이 구독하고 있는 유튜브 채널을 최신으로 갱신합니다.">업데이트</button>
+            <button type="button" class="btn btn-outline-primary" title="기타옵션">옵션</button>
+          </div>
+    </div>
+
+    <!-- 실제 내용--> 
     <div class="d-flex flex-row">
         <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary me-4" style="width: 380px; height: 700px; overflow: scroll; ">
             <a href="/" class="d-flex align-items-center flex-shrink-0 p-3 link-body-emphasis text-decoration-none border-bottom">
             <svg class="bi pe-none me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
-            <span class="fs-5 fw-semibold"> 최근 활동 안한 채널 </span>
+            <span class="fs-5 fw-semibold"> 최근 활동 안한 채널 ({{channels.length}}) </span>
             </a>
             <div class="list-group list-group-flush border-bottom scrollarea">
 

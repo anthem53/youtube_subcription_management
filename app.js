@@ -14,6 +14,7 @@ const bootstrapRouter = require("./routes/bs_router")
 const pageRouter = require('./routes/page');
 const authRouter = require('./routes/auth')
 const youtubeRouter = require('./routes/youtube')
+const channelRouter =require('./routes/channel')
 
 const passportConfig = require('./passport');
 const {sequelize } = require('./models')
@@ -58,6 +59,7 @@ app.use(passport.session());
 app.use('/',pageRouter)
 app.use('/auth',authRouter)
 app.use('/bs',bootstrapRouter)
+app.use('/channel',channelRouter)
 app.use('/youtube',youtubeRouter)
 
 

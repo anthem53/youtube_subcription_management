@@ -35,25 +35,23 @@ module.exports = class Channel extends Sequelize.Model {
                 allowNull: true,
             },
             videoTitle: {
-                type: Sequelize.STRING(50       ),
+                type: Sequelize.STRING(100),
                 allowNull: true,
             },
+     
         }, {
             sequelize,
             timestamps: true,
             underscored: false,
             modelName: 'Channel',
             tableName: 'channels',
-            paranoid: true,
-            charset: 'utf8',
-            collate: 'utf8_general_ci',
+            paranoid: false,
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_unicode_ci',
         });
     }
 
   static associate(db) {
-    db.Channel.belongsTo(db.User, {
-        as:'users',
-        onDelete: 'cascade',
-    })
+    db.Channel.belongsTo(db.User,{foreignKey:'userId',sourceKey:'id'})
   }
 };

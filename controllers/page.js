@@ -3,8 +3,14 @@ const OAuth2 = google.auth.OAuth2
 const { isLoggedIn } = require('../middlewares');
 const { processItemsPromise , getSubscriptionList } = require('../services/youtube')
 
+const User = require('../models/user')
+const Channel = require('../models/channel')
 
 exports.renderMain = async (req,res) =>{
+
+    let curUser = await User.findOne({where:{id:req.user.id}})
+    console.log(curUser, curUser.email)
+
     res.render('main',{title: '메인 페이지 - YSM'})
 }
 
@@ -21,11 +27,17 @@ exports.renderSubscription = async (req,res)=>{
         refresh_token: req.user.refreshToken
     };
     
-    console.log(getSubscriptionList)
+    const channels = Channel.findAll({where:{UserId:req.user.id}})
+    console.log(">>>> channel info!",channels)
+
+    const chanenls = await Channel.findAll({where:{ userId:req.user.id }})
+    console.log(">>>>> Channels list ", channels)
+    res.render('subscription',{title:'메인페이지 - YSM' ,
+    channels: chanenls})
+    return
+
     let subscriptionList = await getSubscriptionList(oauth2Client)
-    console.log("list[0]",subscriptionList)
-    console.log('>>> subscription end ')
-    console.log("list[0]",subscriptionList,subscriptionList[0].snippet)
+
 
     let processPromise = processItemsPromise(subscriptionList)
 
@@ -44,7 +56,7 @@ exports.renderSubscription = async (req,res)=>{
 }
 
 exports.renderTest = (req,res)=>{
-    res.render('test',{title: '테스트 페이지 - YSM'})
+    res.render('subscription',{title: '테스트 페이지 - YSM'})
 }
 
 exports.renderLogin = (req,res) =>{
