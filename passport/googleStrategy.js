@@ -8,10 +8,8 @@ module.exports = () => {
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_ID,
     clientSecret:process.env.GOOGLE_SECRET,
-    callbackURL: '/auth/google/callback',
+    callbackURL: process.env.GOOGLE_CALLBACK,
   }, async (accessToken, refreshToken, profile, done) => {
-    console.log(">>>>> ",accessToken)
-    console.log(">>>>> ",refreshToken)
     
     try {
       const exUser = await User.findOne({
