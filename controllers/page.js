@@ -2,14 +2,12 @@ const { google } = require('googleapis');
 const OAuth2 = google.auth.OAuth2
 const { isLoggedIn } = require('../middlewares');
 const { processItemsPromise , getSubscriptionList } = require('../services/youtube')
+const { getChannels } = require('../services/channel')
 
 const User = require('../models/user')
 const Channel = require('../models/channel')
 
 exports.renderMain = async (req,res) =>{
-
-    let curUser = await User.findOne({where:{id:req.user.id}})
-    console.log(curUser, curUser.email)
 
     res.render('main',{title: '메인 페이지 - YSM'})
 }
@@ -27,32 +25,12 @@ exports.renderSubscription = async (req,res)=>{
         refresh_token: req.user.refreshToken
     };
     
-    const channels = Channel.findAll({where:{UserId:req.user.id}})
-    console.log(">>>> channel info!",channels)
-
-    const chanenls = await Channel.findAll({where:{ userId:req.user.id }})
-    console.log(">>>>> Channels list ", channels)
-    res.render('subscription',{title:'메인페이지 - YSM' ,
-    channels: chanenls})
-    return
-
-    let subscriptionList = await getSubscriptionList(oauth2Client)
-
-
-    let processPromise = processItemsPromise(subscriptionList)
-
-    processPromise.then(function(promiseResult){
-        console.log("############# promise result #############")
-                //console.log(promiseResult)
-                res.render('subscription',{title:'메인페이지 - YSM' ,
-                                        channels: promiseResult})
-    }, function(err){
-        console.log("############# promise Fail #############")
-        //console.error(err)
-        console.log("############# promise Fail END #############")
-    })
-
     
+    const channels = await getChannels(req.user.id)
+
+    res.render('subscription',{title:'메인페이지 - YSM' ,
+    channels: channels})
+    return    
 }
 
 exports.renderTest = (req,res)=>{
