@@ -34,7 +34,7 @@ exports.saveSubscriptChannel = async (req,res,next) =>{
         
             processPromise.then(function(promiseResult){
                 console.log("############# promise result #############")
-                        //console.log(promiseResult)
+                        
                 let promiseList = []
                 console.log(">>> user id :", req.user.id)
                 for (let resultIndex in promiseResult){

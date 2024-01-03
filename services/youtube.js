@@ -80,7 +80,6 @@ exports.processItemsPromise =  async (items) =>{
         const diff = (curDate - new Date(info.publishedAt)) / (1000*60*60*24) 
       
         if (diff >= 5){
-
           resultList.push(info)
         }
       }
