@@ -53,12 +53,13 @@ exports.saveSubscriptChannel = async (req,res,next) =>{
                 }
                 Promise.all(promiseList)
                 console.log("subscript List Complete")
-                res.redirect('/subs')
+                console.log(req.get('referer'))
             }, function(err){
                 console.log("############# promise Fail #############")
                 //console.error(err)
                 console.log("############# promise Fail END #############")
             })
+
         }
         else{
             res.status(404).send("No User")
@@ -70,6 +71,10 @@ exports.saveSubscriptChannel = async (req,res,next) =>{
         console.error(error)
         next(error)
     }
+
+
+    
+
 }
 
 exports.test = ()=>{
