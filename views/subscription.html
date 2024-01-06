@@ -17,6 +17,18 @@
             headers: {
 	    	    'Content-Type':'application/json;charset=utf-8'
 	        },
+        }).then((response)=>{
+            
+            let data = response.json()
+            data.then(function(result){
+                let resultJSON = JSON.parse(result);
+                
+                if (resultJSON['status'] == 200){
+                    window.location.replace("/subs")
+                }
+            })
+
+            window.location.replace("/subs")
         })
     }
 </script>

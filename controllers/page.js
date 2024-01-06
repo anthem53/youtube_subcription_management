@@ -34,7 +34,7 @@ exports.renderSubscription = async (req,res)=>{
 }
 
 exports.renderTest = (req,res)=>{
-    res.render('subscription',{title: '테스트 페이지 - YSM'})
+    res.render('test',{title: '테스트 페이지 - YSM'})
 }
 
 exports.renderLogin = (req,res) =>{

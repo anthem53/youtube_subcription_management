@@ -9,7 +9,8 @@ exports.getChannels = async(userId) =>{
     for (const channelIndex in channels){
         let channel = channels[channelIndex]
         let channelDate = new Date(channel.dataValues.publishedAt)
-        let result = channelDate.getFullYear()+"-"+channelDate.getMonth()+"-"+channelDate.getDate()
+        const month = channelDate.getMonth()+1
+        let result = channelDate.getFullYear()+"-"+month+"-"+channelDate.getDate()
 
         channel.dataValues.publishedAt = result
     }

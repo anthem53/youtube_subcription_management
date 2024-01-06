@@ -32,7 +32,7 @@ exports.saveSubscriptChannel = async (req,res,next) =>{
         
             let processPromise = processItemsPromise(subscriptionList)
         
-            processPromise.then(function(promiseResult){
+            processPromise.then( function(promiseResult){
                 console.log("############# promise result #############")
                         
                 let promiseList = []
@@ -53,7 +53,13 @@ exports.saveSubscriptChannel = async (req,res,next) =>{
                 }
                 Promise.all(promiseList)
                 console.log("subscript List Complete")
-                console.log(req.get('referer'))
+                var status = {
+                    "status": 200,
+                    "message": 'Update Complete'
+                }
+                res.json(status)
+                
+    
             }, function(err){
                 console.log("############# promise Fail #############")
                 //console.error(err)
@@ -77,7 +83,16 @@ exports.saveSubscriptChannel = async (req,res,next) =>{
 
 }
 
-exports.test = ()=>{
+exports.test = (req,res)=>{
 
-    console.log("TEST")
+    console.log("Channel file , TEST")
+
+
+    var status = {
+        "status": 205,
+        "message": 'test OK'
+    }
+    
+    return res.json(JSON.stringify(status));
+
 }
