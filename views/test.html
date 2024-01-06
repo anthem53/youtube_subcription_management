@@ -11,7 +11,25 @@
 
     }
 
+    function updateMode(){
+        const spinningBar = document.getElementById('spinningBar');
+        const updateDateText = document.getElementById('updateDateText');
+
+        spinningBar.style.opacity = 1.0
+        updateDateText.innerText=" "
+        console.log(spinningBar, updateDateText)
+    }
+    function normalMode(){
+        const spinningBar = document.getElementById('spinningBar');
+        const updateDateText = document.getElementById('updateDateText');
+
+        spinningBar.style.opacity = 0.0
+        updateDateText.innerText="Kill YOU"
+        console.log(spinningBar, updateDateText)
+    }
+
     function updateChannel(){
+        updateMode()
         fetch('/channel/test',{
             method: 'POST',
             headers: {
@@ -23,10 +41,14 @@
 
             DataPromise.then(function(result){
                 let resultJSON = JSON.parse(result);
-                console.log(result,typeof(result) ,result['status'],result.status, result.message, result['message'])
+                
+                const wakeUpTime = Date.now() + 2000;
+                while (Date.now() < wakeUpTime) {}
+
+                normalMode()
                 if (resultJSON['status'] == 205){
                     console.log("resultJSON")
-                    //window.location.replace("/test")
+                    window.location.replace("/test")
                 }
             })
             
@@ -36,13 +58,7 @@
 
 <div class="container  min-vh-100 justify-content-center">    
 
-    <!-- 현재 탭의 상단 옵션 버튼 -->
-    <div class="d-flex justify-content-end flex-row">
-        <div class="btn-group" role="group" aria-label="Basic outlined example">
-            <button type="button" class="btn btn-outline-primary" onclick="updateChannel()" title="현재 접속한 계정이 구독하고 있는 유튜브 채널을 최신으로 갱신합니다.">업데이트</button>
-            <button type="button" class="btn btn-outline-primary" title="기타옵션">옵션</button>
-          </div>
-    </div>
+    
 
     <!-- 실제 내용--> 
     <div class="d-flex flex-row">
@@ -70,7 +86,17 @@
         </div>
 
         <div class="d-flex flex-column">
-
+            <!-- 현재 탭의 상단 옵션 버튼 -->
+            <div class="d-flex justify-content-end flex-row mb-3">
+                <div class="spinner-border" role="status" style="opacity:0.0" id="spinningBar">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="me-3" id="updateDateText">Kill you</div>
+                <div class="btn-group ms-5" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-outline-primary" onclick="updateChannel()" title="현재 접속한 계정이 구독하고 있는 유튜브 채널을 최신으로 갱신합니다.">업데이트</button>
+                    <button type="button" class="btn btn-outline-primary" title="기타옵션" onclick="normalMode()">옵션</button>
+                </div>
+            </div>
 
             <div class="mb-4  row">
                 <label for="channelName" class="col-sm-4 col-form-label">채널 이름 : </label>

@@ -15,6 +15,7 @@ const pageRouter = require('./routes/page');
 const authRouter = require('./routes/auth')
 const youtubeRouter = require('./routes/youtube')
 const channelRouter =require('./routes/channel')
+const userRouter =require('./routes/user')
 
 const passportConfig = require('./passport');
 const {sequelize } = require('./models')
@@ -61,6 +62,7 @@ app.use('/auth',authRouter)
 app.use('/bs',bootstrapRouter)
 app.use('/channel',channelRouter)
 app.use('/youtube',youtubeRouter)
+app.use('/user',userRouter)
 
 
 app.listen(app.get('port'), () => {

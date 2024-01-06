@@ -11,37 +11,78 @@
 
     }
 
+    function updateMode(){
+        const spinningBar = document.getElementById('spinningBar');
+        const updateDateText = document.getElementById('updateDateText');
+
+        spinningBar.style.opacity = 1.0
+        updateDateText.innerText=" "
+        console.log(spinningBar, updateDateText)
+    }
+    function normalMode(){
+        const spinningBar = document.getElementById('spinningBar');
+        const updateDateText = document.getElementById('updateDateText');
+
+        spinningBar.style.opacity = 0.0
+        updateDateText.innerText= "{{subsUpdateAt}}"
+        console.log(spinningBar, updateDateText)
+    }
+
+
     function updateChannel(){
+        updateMode()
         fetch('/channel/save',{
             method: 'POST',
             headers: {
 	    	    'Content-Type':'application/json;charset=utf-8'
 	        },
         }).then((response)=>{
-            
+            console.log(response)
             let data = response.json()
+            normalMode()
             data.then(function(result){
-                let resultJSON = JSON.parse(result);
                 
-                if (resultJSON['status'] == 200){
+                if (result['status'] == 200){
                     window.location.replace("/subs")
                 }
             })
 
-            window.location.replace("/subs")
         })
+    }
+
+    function updateInactiveTime(){
+
+        const newValue = document.getElementById('inactiveTimeInput').value;
+        console.log(newValue)
+
+        const obj = {'newValue':newValue}
+
+        const data = {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(obj)
+        };
+
+        fetch('/user/update/inactiveTime',
+            data
+        ).then((response)=>{
+            console.log(response)
+            let data = response.json()
+            data.then(function(result){
+                if (result['status'] == 200){
+                    window.location.replace("/subs")
+                }
+            })
+        })
+
     }
 </script>
 
 <div class="container  min-vh-100 justify-content-center">    
 
-    <!-- 현재 탭의 상단 옵션 버튼 -->
-    <div class="d-flex justify-content-end flex-row">
-        <div class="btn-group" role="group" aria-label="Basic outlined example">
-            <button type="button" class="btn btn-outline-primary" onclick="updateChannel()" title="현재 접속한 계정이 구독하고 있는 유튜브 채널을 최신으로 갱신합니다.">업데이트</button>
-            <button type="button" class="btn btn-outline-primary" title="기타옵션">옵션</button>
-          </div>
-    </div>
+    
 
     <!-- 실제 내용--> 
     <div class="d-flex flex-row">
@@ -69,6 +110,26 @@
         </div>
 
         <div class="d-flex flex-column">
+
+            <!-- 현재 탭의 상단 옵션 버튼 -->
+            <div class="d-flex justify-content-end flex-row mb-3">
+                <div class="spinner-border" role="status" style="opacity:0.0" id="spinningBar">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="me-3" id="updateDateText">{{subsUpdateAt}} ({{inactiveTime}}일 잠수)</div>
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-outline-primary" onclick="updateChannel()" title="현재 접속한 계정이 구독하고 있는 유튜브 채널을 최신으로 갱신합니다.">업데이트</button>
+                    <button type="button"  data-bs-toggle="collapse" class="btn btn-outline-primary" title="기타옵션" data-bs-target="#option_inactiveTime" aria-expanded="false" aria-controls="option_inactiveTime">옵션</button>
+                </div>
+            </div>
+
+            <div class='collapse mb-3' id="option_inactiveTime" >
+                <div class="card card-body d-flex flex-row">
+                    <span class="me-3"> 며칠 잠수 탔는지? : </span>
+                    <input type="number" class="mx-2" id="inactiveTimeInput">
+                    <button type="button" class="btn btn-outline-primary" onclick="updateInactiveTime()"> 업데이트 </button>
+                </div>
+            </div>
 
 
             <div class="mb-4  row">

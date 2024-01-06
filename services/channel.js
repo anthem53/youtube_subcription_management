@@ -1,9 +1,24 @@
 const Channel = require('../models/channel')
+const Sequelize = require('sequelize');
+const { Op } = require("sequelize");
 
+exports.getChannels = async(userId,inactiveTime) =>{
 
-exports.getChannels = async(userId) =>{
+    const curDate = Date.now()
 
-    const channels = await Channel.findAll({where:{ userId:userId }})
+    const channels = await Channel.findAll({
+                                            where:{ 
+                                                userId:userId ,
+                                                publishedAt :{
+                                                 [Op.lt]   : new Date() - 24 * 60 * 60 * 1000 * inactiveTime
+                                                }
+                                            },
+                                            order: [
+                                                ['publishedAt','ASC']
+                                            ]
+                                        
+                                        
+                                        })
     
 
     for (const channelIndex in channels){
@@ -13,6 +28,7 @@ exports.getChannels = async(userId) =>{
         let result = channelDate.getFullYear()+"-"+month+"-"+channelDate.getDate()
 
         channel.dataValues.publishedAt = result
+        
     }
 
     return channels

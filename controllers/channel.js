@@ -20,13 +20,19 @@ exports.saveSubscriptChannel = async (req,res,next) =>{
                 refresh_token: req.user.refreshToken
             };
             
-            console.log(">>> id: ", req.user.id)
+            
+            User.update({
+                subsUpdateAt: new Date()
+            },{
+                where:{id :req.user.id}
+            })
+
             const destroyResult = await Channel.destroy({
                 where: {
                     userId: req.user.id
                 }
             });
-            console.log(">>> Destroy Result : ", destroyResult)
+            
 
             let subscriptionList = await getSubscriptionList(oauth2Client)
         
@@ -61,9 +67,9 @@ exports.saveSubscriptChannel = async (req,res,next) =>{
                 
     
             }, function(err){
-                console.log("############# promise Fail #############")
-                //console.error(err)
-                console.log("############# promise Fail END #############")
+                
+                console.error(err)
+                
             })
 
         }

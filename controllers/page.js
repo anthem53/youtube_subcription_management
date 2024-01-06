@@ -26,10 +26,18 @@ exports.renderSubscription = async (req,res)=>{
     };
     
     
-    const channels = await getChannels(req.user.id)
+    const curUser = await User.findOne({where:{ id:req.user.id}})
+    const channels = await getChannels(req.user.id,curUser.inactiveTime)
+    const subsUpdateAt = new Date(req.user.dataValues.subsUpdateAt)
+    const subsUpdateAtMonth = subsUpdateAt.getMonth()+1
+    let subsUpdateAtString = subsUpdateAt.getFullYear()+"-"+subsUpdateAtMonth+"-"+ subsUpdateAt.getDate()
+
+    
 
     res.render('subscription',{title:'메인페이지 - YSM' ,
-    channels: channels})
+    channels: channels,
+    subsUpdateAt:subsUpdateAtString,
+    inactiveTime: curUser.inactiveTime})
     return    
 }
 

@@ -19,6 +19,13 @@ module.exports = class User extends Sequelize.Model {
             refreshToken: {
                 type: Sequelize.STRING,
                 allowNull: true,
+            },
+            subsUpdateAt: {
+                type: Sequelize.DATE,
+            },
+            inactiveTime:{
+                type: Sequelize.INTEGER,
+                allowNull: false
             }
         }, {
             sequelize,
