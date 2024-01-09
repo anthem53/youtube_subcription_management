@@ -71,6 +71,23 @@ exports.processItemsPromise =  async (items) =>{
   return new Promise(async function(resolved,rejected){
     
     try{
+      let resultList  = await processItems(items)
+
+      resolved(resultList)
+    }
+    catch(error){
+      console.error(error)      
+      rejected(error)
+    }
+    
+  })
+}
+
+exports.processItemsPromise2 =  async (items) =>{
+    
+  return new Promise(async function(resolved,rejected){
+    
+    try{
       let tempResultList  = await processItems(items)
       let resultList  = []
       const curDate = Date.now()
@@ -93,7 +110,6 @@ exports.processItemsPromise =  async (items) =>{
     //console.log(result)
     
   })
-
 }
 
 exports.getSubscriptionList = async (oauth2Client)=>{

@@ -35,6 +35,10 @@ exports.saveSubscriptChannel = async (req,res,next) =>{
             
 
             let subscriptionList = await getSubscriptionList(oauth2Client)
+
+            for (let channel in subscriptionList){
+                
+            }
         
             let processPromise = processItemsPromise(subscriptionList)
         
@@ -45,6 +49,9 @@ exports.saveSubscriptChannel = async (req,res,next) =>{
                 console.log(">>> user id :", req.user.id)
                 for (let resultIndex in promiseResult){
                     const result = promiseResult[resultIndex]
+                    if ( result.publishedAt == undefined){
+                        result.publishedAt = '2000-01-01T00:00:00Z'
+                    }
                     const promise =  Channel.create({
                         title: result.title,
                         channelId: result.channelId,

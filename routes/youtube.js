@@ -21,9 +21,12 @@ router.get('/subscription',isLoggedIn,async  (req,res)=>{
         access_token: req.user.accessToken,
         refresh_token: req.user.refreshToken
     };
-
-    const result = await getSubscriptionList(oauth2Client)
     
+    result = {
+        'kill':'you',
+        'mine':'you'
+    }
+
     console.log(">>> result :", result)
     res.json(result)
 
