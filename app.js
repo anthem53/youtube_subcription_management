@@ -38,7 +38,6 @@ sequelize.sync({ force: false })
 
 
 app.use(morgan('dev'));
-app.use('/img',express.static(path.join(__dirname, 'public')));
 //app.use('/img', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -57,6 +56,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
+app.use('/img',express.static(path.join(__dirname, 'public')));
 app.use('/',pageRouter)
 app.use('/auth',authRouter)
 app.use('/bs',bootstrapRouter)
