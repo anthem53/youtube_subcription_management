@@ -28,7 +28,8 @@ module.exports = () => {
           email: profile.email,
           nick: profile.family_name + " "+ profile.given_name,
           accessToken: accessToken,
-          refreshToken: refreshToken
+          refreshToken: refreshToken,
+          inactiveTime: 10
         });
         done(null, newUser);
       }
