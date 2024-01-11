@@ -6,15 +6,29 @@
     
     <link rel="stylesheet" href="/bs/bootstrap/css/bootstrap.min.css">
     <title> {{title}}</title>
+    <script>
+
+    </script>
+
 </head>
 <body>
     <div class="container">
         <header class="d-flex justify-content-center py-3">
           <ul class="nav nav-pills">
-            <li class="nav-item"><a href="/main" class="nav-link active" aria-current="page">Home</a></li>
-            <li class="nav-item"><a href="/subs" class="nav-link"> 잠수된 채널 감지</a></li>
-            <li class="nav-item"><a href="/youtube/subscription" class="nav-link"> 유튜브 api 기능 확인</a></li>
-            <li class="nav-item"><a href="#" class="nav-link disabled">비활성화2</a></li>
+            {% if page == 'main'%}
+            <li class="nav-item"><a href="/main" class="nav-link active" aria-current="page" id="menuHome">Home</a></li>
+            {% else %}
+            <li class="nav-item"><a href="/main" class="nav-link " aria-current="page" id="menuHome">Home</a></li>
+            {% endif%}
+
+            {% if page == 'subs'%}
+            <li class="nav-item"><a href="/subs" class="nav-link active" aria-current="page" id="menuSubs">잠수 채널 감지</a></li>
+            {% else %}
+            <li class="nav-item"><a href="/subs" class="nav-link " aria-current="page" id="menuSubs">잠수 채널 감지</a></li>
+            {% endif%}
+
+            <!-- <li class="nav-item"><a href="/youtube/subscription" class="nav-link" id="menu3"> 유튜브 api 기능 확인</a></li> -->
+            <!-- <li class="nav-item"><a href="#" class="nav-link disabled">비활성화2</a></li> -->
             <li class="nav-item"><a href="/auth/logout" class="nav-link">로그아웃</a></li>
           </ul>
         </header>

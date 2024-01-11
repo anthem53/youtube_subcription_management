@@ -9,7 +9,8 @@ const Channel = require('../models/channel')
 
 exports.renderMain = async (req,res) =>{
 
-    res.render('main',{title: '메인 페이지 - YSM'})
+    res.render('main',{title: '메인 페이지 - YSM', 
+                        page: "main"})
 }
 
 exports.renderSubscription = async (req,res)=>{
@@ -37,7 +38,8 @@ exports.renderSubscription = async (req,res)=>{
     res.render('subscription',{title:'메인페이지 - YSM' ,
     channels: channels,
     subsUpdateAt:subsUpdateAtString,
-    inactiveTime: curUser.inactiveTime})
+    inactiveTime: curUser.inactiveTime,
+            page: "subs",})
     return    
 }
 
