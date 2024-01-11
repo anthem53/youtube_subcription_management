@@ -16,6 +16,10 @@ async function updateChannelInfo ( channelId,channel){
         part: 'snippet',
         playlistId: playlistId     
       }
+      const descriptionList  =channel.snippet.description.split('\n')
+      const curDescription = descriptionList[0]
+
+
       await axios.get("https://www.googleapis.com/youtube/v3/playlistItems",{
         params
       })
@@ -23,7 +27,7 @@ async function updateChannelInfo ( channelId,channel){
           temp = {}
           temp.title = channel.snippet.title
           temp.channelId = channel.snippet.resourceId.channelId
-          temp.description = channel.snippet.description.substring(0,40)
+          temp.description = curDescription
           temp.publishedAt = response.data.items[0].snippet.publishedAt
           temp.videoId = response.data.items[0].snippet.resourceId.videoId
           temp.videoTitle = response.data.items[0].snippet.title
@@ -37,7 +41,7 @@ async function updateChannelInfo ( channelId,channel){
             temp = {}
             temp.title = channel.snippet.title
             temp.channelId = channel.snippet.resourceId.channelId
-            temp.description = channel.snippet.description.substring(0,40)
+            temp.description = curDescription
             temp.publishedAt = undefined
             temp.videoId = undefined
             temp.videoTitle = undefined
@@ -79,35 +83,6 @@ exports.processItemsPromise =  async (items) =>{
       console.error(error)      
       rejected(error)
     }
-    
-  })
-}
-
-exports.processItemsPromise2 =  async (items) =>{
-    
-  return new Promise(async function(resolved,rejected){
-    
-    try{
-      let tempResultList  = await processItems(items)
-      let resultList  = []
-      const curDate = Date.now()
-      
-      for (let infoIndex in tempResultList){
-        const info = tempResultList[infoIndex]
-        const diff = (curDate - new Date(info.publishedAt)) / (1000*60*60*24) 
-      
-        if (diff >= 5){
-          resultList.push(info)
-        }
-      }
-      //console.log(">>>> resultList : ",resultList)
-      resolved(resultList)
-    }
-    catch(error){
-      console.error(error)      
-      rejected(error)
-    }
-    //console.log(result)
     
   })
 }
