@@ -35,7 +35,6 @@ exports.saveSubscriptChannel = async (req,res,next) =>{
             
 
             let subscriptionList = await getSubscriptionList(oauth2Client)
-
         
             let processPromise = processItemsPromise(subscriptionList)
         

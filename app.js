@@ -57,6 +57,7 @@ app.use(passport.session());
 
 
 app.use('/img',express.static(path.join(__dirname, 'public')));
+app.use('/css',express.static(path.join(__dirname, 'public')));
 app.use('/',pageRouter)
 app.use('/auth',authRouter)
 app.use('/bs',bootstrapRouter)
